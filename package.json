@@ -1,0 +1,19 @@
+{
+  "name": "uctusd",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "setup": "node src/setup-token.js",
+    "distribute": "node src/distribute.js",
+    "onboard": "node src/onboard-student.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "type": "module",
+  "dependencies": {
+    "xrpl": "^5.0.0"
+  }
+}
