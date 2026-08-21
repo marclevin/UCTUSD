@@ -14,7 +14,7 @@ Teaching token for UCT student projects. **Testnet only. These tokens have no va
 | Supply | 100,000,000 |
 | Transfer fee | 0% |
 
-`UCTUSD` is 6 characters, so, exactly like RLUSD, it cannot use the 3-character
+`UCTUSD` is 6 characters, so — exactly like RLUSD — it cannot use the 3-character
 ISO-style code and must be given as the 40-character hex code above.
 
 ## Issuer configuration
@@ -35,7 +35,7 @@ Modelled on RLUSD's mainnet issuer (`rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De`):
 The three differences are deliberate: RLUSD's settings block payments *to* the
 issuer, which would break burn/redeem exercises.
 
-## Scripts
+## Node scripts (xrpl.js)
 
 ```bash
 npm install
@@ -65,10 +65,31 @@ UCTUSD_DISTRIBUTOR_SEED=<distributor seed> npm run onboard
 Omit `UCTUSD_DISTRIBUTOR_SEED` and they still get a trust-lined wallet; they just
 need a TA to fund it.
 
+## Python (xrpl-py)
+
+`python/onboard_customer.py` is the same onboarding flow in Python, written the
+way a **custodial service** would do it: create an account you hold the keys for
+on the customer's behalf, activate it with XRP, open the UCTUSD trust line.
+
+```bash
+cd python
+pip install -r requirements.txt
+
+python onboard_customer.py                  # new customer account
+python onboard_customer.py --seed sEd...    # trust-line an existing account
+python onboard_customer.py --limit 50000    # custom trust limit
+```
+
+It reads the issuer from `UCTUSD_ISSUER`, else `../accounts.json`, else a built-in
+default — so it still works if you hand students only this one file.
+
+A trust line is a **cap, not a balance**: opening one lets the account hold UCTUSD
+but does not give it any. Fund it with `npm run distribute -- <address>`.
+
 ## Adding UCTUSD to Xaman
 
-1. Visit https://xrpl.services/, log in with your Xaman account, and go to **XRPL Transactions**.
-2. Make sure you are on the Test net, then click **Trust Set (Trustlines)**.
+1. Xaman → Settings → Advanced → **Node**: switch to a Testnet node.
+2. Go to the account, tap **Add asset** → **Add custom asset** (or "manually").
 3. Issuer: `rELez4x4Zqv3KYqboYVfrYPF8521Ycbxa5`
    Currency: `5543545553440000000000000000000000000000`
 4. Approve the TrustSet, then run
@@ -80,4 +101,5 @@ need a TA to fund it.
 - `src/setup-token.js` — one-time issuance (refuses to run twice)
 - `src/distribute.js` — hand out tokens / inspect supply
 - `src/onboard-student.js` — student wallet + trust line + grant
+- `python/onboard_customer.py` — custodial-customer onboarding in xrpl-py
 - `accounts.json` — **contains testnet seeds**; gitignored
